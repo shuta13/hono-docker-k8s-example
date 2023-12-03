@@ -1,0 +1,25 @@
+build:
+  api:
+    image: okteto.dev/node:18
+    context: .
+    dockerfile: apps/api/Dockerfile
+  web:
+    image: okteto.dev/node:18
+    context: .
+    dockerfile: apps/web/Dockerfile
+deploy:
+  - kubectl apply -f ./apps/web/k8s_web.yaml
+  - kubectl apply -f ./apps/api/k8s_api.yaml
+dev:
+  api:
+    command: bash
+    forward:
+      - 3000:3000
+    sync:
+      - ./apps/api:/apps/api
+  web:
+    command: bash
+    forward:
+      - 8080:8080
+    sync:
+      - ./apps/web:/apps/web
